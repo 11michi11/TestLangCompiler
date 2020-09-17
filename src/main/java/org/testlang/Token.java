@@ -25,27 +25,27 @@ public class Token {
 
     public boolean isAssignOperator() {
         if (kind == OPERATOR)
-            return containsOperator(spelling, ASSIGNOPS);
+            return containsOperator(spelling, ASSIGN_OPS);
         else
             return false;
     }
 
     public boolean isAddOperator() {
         if (kind == OPERATOR)
-            return containsOperator(spelling, ADDOPS);
+            return containsOperator(spelling, ADD_OPS);
         else
             return false;
     }
 
     public boolean isMulOperator() {
         if (kind == OPERATOR)
-            return containsOperator(spelling, MULOPS);
+            return containsOperator(spelling, MUL_OPS);
         else
             return false;
     }
 
 
-    private boolean containsOperator(String spelling, String OPS[]) {
+    private boolean containsOperator(String spelling, String[] OPS) {
         for (String op : OPS) {
             if (spelling.equals(op))
                 return true;
@@ -54,21 +54,22 @@ public class Token {
     }
 
 
+    // TODO There should be more keywords here
     private static final TokenKind[] KEYWORDS = {OPR, IF, SEND, OUT, IN, UNTIL};
 
-
-    private static final String ASSIGNOPS[] =
+    // TODO Update operators
+    private static final String[] ASSIGN_OPS =
             {
-                    ":=",
+                    "=",
             };
 
-    private static final String ADDOPS[] =
+    private static final String[] ADD_OPS =
             {
                     "+",
                     "-",
             };
 
-    private static final String MULOPS[] =
+    private static final String[] MUL_OPS =
             {
                     "*",
                     "/",
