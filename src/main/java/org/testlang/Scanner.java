@@ -60,7 +60,7 @@ public class Scanner {
             while (isDigit(currentChar))
                 takeIt();
 
-            return INTEGERLITERAL;
+            return NUMBER_LITERAL;
 
         }
         switch (currentChar) {
@@ -90,11 +90,11 @@ public class Scanner {
 
             case '(':
                 takeIt();
-                return LEFTPARAN;
+                return LEFT_PARAN;
 
             case ')':
                 takeIt();
-                return RIGHTPARAN;
+                return RIGHT_PARAN;
 
             case SourceFile.EOT:
                 return EOT;

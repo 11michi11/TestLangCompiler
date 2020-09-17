@@ -3,27 +3,32 @@ package org.testlang;
 
 public enum TokenKind {
     IDENTIFIER,
-    INTEGERLITERAL,
     OPERATOR,
 
-    DECLARE("declare"),
-    DO("do"),
-    ELSE("else"),
-    FI("fi"),
-    FUNC("func"),
-    IF("if"),
-    OD("od"),
-    RETURN("return"),
-    SAY("say"),
-    THEN("then"),
-    VAR("var"),
-    WHILE("while"),
+    NUMBER_LITERAL,
+    LETTER_LITERAL,
+    STATE_LITERAL,
+    TYPE,
 
-    COMMA(","),
+    OPR("opr"),
+    IF("?"),
+    SEND("send"),
+    UNTIL("until"),
+
+    OUT("out"),
+    IN("in"),
+
+    LEFT_PARAN("("),
+    RIGHT_PARAN(")"),
+    LEFT_SQUARE("["),
+    RIGHT_SQUARE("]"),
+    LEFT_CURLY("{"),
+    RIGHT_CURLY("}"),
+    LEFT_DIAMOND("<"),
+    RIGHT_DIAMON(">"),
     SEMICOLON(";"),
-    LEFTPARAN("("),
-    RIGHTPARAN(")"),
-
+    COLON(":"),
+    COMMA(","),
     EOT,
 
     ERROR;
