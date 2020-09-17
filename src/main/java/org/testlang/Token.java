@@ -4,7 +4,6 @@ import static org.testlang.TokenKind.*;
 
 
 public class Token {
-//	public byte kind;
 
     public TokenKind kind;
     public String spelling;
@@ -15,18 +14,12 @@ public class Token {
         this.spelling = spelling;
 
         if (kind == IDENTIFIER)
-/*
-			for( byte i = 0; i < SPELLINGS.length; ++i )
-				if( spelling.equals( SPELLINGS[i] ) ) {
-					this.kind = i;
-					break;
-				}
-*/
-            for (TokenKind tk : KEYWORDS)
+            for (TokenKind tk : KEYWORDS) {
                 if (spelling.equals(tk.getSpelling())) {
                     this.kind = tk;
                     break;
                 }
+            }
     }
 
 
@@ -53,10 +46,10 @@ public class Token {
 
 
     private boolean containsOperator(String spelling, String OPS[]) {
-        for (int i = 0; i < OPS.length; ++i)
-            if (spelling.equals(OPS[i]))
+        for (String op : OPS) {
+            if (spelling.equals(op))
                 return true;
-
+        }
         return false;
     }
 	
