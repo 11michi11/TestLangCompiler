@@ -8,12 +8,20 @@ public enum TokenKind {
     NUMBER_LITERAL,
     LETTER_LITERAL,
     STATE_LITERAL,
-    TYPE,
+
+    NUMBER_TYPE("number"),
+    LETTER_TYPE("letter"),
+    STATE_TYPE("state"),
+    COL_TYPE("col"),
+    VOID_TYPE("void"),
 
     OPR("opr"),
     IF("?"),
     SEND("send"),
     UNTIL("until"),
+
+    TRUE("true"),
+    FALSE("false"),
 
     OUT("out"),
     IN("in"),
@@ -25,10 +33,13 @@ public enum TokenKind {
     LEFT_CURLY("{"),
     RIGHT_CURLY("}"),
     LEFT_DIAMOND("<"),
-    RIGHT_DIAMON(">"),
+    RIGHT_DIAMOND(">"),
     SEMICOLON(";"),
     COLON(":"),
     COMMA(","),
+    APOSTROPHE("`"),
+    SINGLE_QUOTE("'"),
+    EXCLAMATION("!"),
     EOT,
 
     ERROR;

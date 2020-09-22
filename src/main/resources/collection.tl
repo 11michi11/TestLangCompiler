@@ -6,14 +6,14 @@
 
     until (i < n) [
         j: number = 1;
-        for (j < n-i) [
+        until (j < n-i) [
             ? (numbers<j> > numbers<j+1>) [
                 temp: number = numbers<j>;
                 numbers<j> = numbers<j+1>;
                 numbers<j+1> = temp;
             ]
-            j++;
+            j = j + 1;
         ]
-        i++;
+        i = i+1;
     ]
 ]

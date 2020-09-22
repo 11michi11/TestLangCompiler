@@ -2,10 +2,10 @@
     letters: col<letter> = <'a', 'b', 'b', 'd', 'e'>;
     otherLetters: col<letter> = <'f', 'g', h'>;
 
-    || array concatenation
+    # array concatenation
 
     letters = letters + otherLetters;
-    notPrinted: col<letter>{10}; || array of type letter with fixed size of 5
+    notPrinted: col<letter>{10}; # array of type letter with fixed size of 5
 
     size: number = letters';
     shouldPrint: state = false;

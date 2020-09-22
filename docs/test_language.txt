@@ -1,7 +1,7 @@
 Program is a block
 Block:
 [
-// The start and end of the block
+# The start and end of the block
 ]
 
 
@@ -29,8 +29,8 @@ until () [
 ]
 
 
-in => a; || read one char
-out <= a; || print anything
+in => a; # read one char
+out <= a; # print anything
 
 Operations: 
 bool:
@@ -54,14 +54,14 @@ col + col => col
 
 <5,6> + <7> = <5,6,7>
 
-d<5> || this is comment and this is array by index access
-|| access index 5, index starts at 1
+d<5> # this is comment and this is array by index access
+# access index 5, index starts at 1
 
-d--; || remove first element
+d--; # remove first element
 
-d << 7; || insert at the end 
+d << 7; # insert at the end
  
-d >> 7; || insert at the front
+d >> 7; # insert at the front
 
-d//; || remove last element
+d//; # remove last element
 

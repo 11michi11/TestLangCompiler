@@ -6,7 +6,7 @@
 
     until (counter > 0) [
         result = result  + calculate(counter, result);
-        counter--;
+        counter = counter - 1;
     ]
 
     out <= result;

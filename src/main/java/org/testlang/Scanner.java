@@ -65,20 +65,46 @@ public class Scanner {
         }
         switch (currentChar) {
             case '+':
-            case '-':
             case '*':
-            case '/':
-            case '%':
-                takeIt();
-                return OPERATOR;
-
-            case ':':
+            case '=':
                 takeIt();
                 if (currentChar == '=') {
                     takeIt();
                     return OPERATOR;
-                } else
-                    return ERROR;
+                } else if (currentChar == '>') {
+                    takeIt();
+                    return OPERATOR;
+                }
+                return OPERATOR;
+
+            case '/':
+                takeIt();
+                if (currentChar == '/') {
+                    takeIt();
+                    return OPERATOR;
+                }
+                return OPERATOR;
+
+            case '-':
+                takeIt();
+                if (currentChar == '-') {
+                    // Double minus --
+                    takeIt();
+                    return OPERATOR;
+                }
+                return OPERATOR;
+
+            case '`':
+                takeIt();
+                return APOSTROPHE;
+
+            case '\'':
+                takeIt();
+                return SINGLE_QUOTE;
+
+            case ':':
+                takeIt();
+                return COLON;
 
             case ',':
                 takeIt();
@@ -95,6 +121,49 @@ public class Scanner {
             case ')':
                 takeIt();
                 return RIGHT_PARAN;
+
+            case '{':
+                takeIt();
+                return LEFT_CURLY;
+
+            case '}':
+                takeIt();
+                return RIGHT_CURLY;
+
+            case '[':
+                takeIt();
+                return LEFT_SQUARE;
+
+            case ']':
+                takeIt();
+                return RIGHT_SQUARE;
+
+            case '<':
+                takeIt();
+                if (currentChar == '<') {
+                    takeIt();
+                    return OPERATOR;
+                } else if (currentChar == '=') {
+                    takeIt();
+                    return OPERATOR;
+                }
+                return LEFT_DIAMOND;
+
+            case '>':
+                takeIt();
+                if (currentChar == '>') {
+                    takeIt();
+                    return OPERATOR;
+                }
+                return RIGHT_DIAMOND;
+
+            case '?':
+                takeIt();
+                return IF;
+
+            case '!':
+                takeIt();
+                return EXCLAMATION;
 
             case SourceFile.EOT:
                 return EOT;

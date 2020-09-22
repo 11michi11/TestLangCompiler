@@ -13,15 +13,15 @@ public class Token {
         this.kind = kind;
         this.spelling = spelling;
 
-        if (kind == IDENTIFIER)
+        if (kind == IDENTIFIER) {
             for (TokenKind tk : KEYWORDS) {
                 if (spelling.equals(tk.getSpelling())) {
                     this.kind = tk;
                     break;
                 }
             }
+        }
     }
-
 
     public boolean isAssignOperator() {
         if (kind == OPERATOR)
@@ -44,7 +44,6 @@ public class Token {
             return false;
     }
 
-
     private boolean containsOperator(String spelling, String[] OPS) {
         for (String op : OPS) {
             if (spelling.equals(op))
@@ -53,11 +52,10 @@ public class Token {
         return false;
     }
 
+    private static final TokenKind[] KEYWORDS = {OPR, SEND, OUT, IN, UNTIL, TRUE, FALSE, NUMBER_TYPE,
+            LETTER_TYPE, STATE_TYPE, COL_TYPE, VOID_TYPE};
 
-    // TODO There should be more keywords here
-    private static final TokenKind[] KEYWORDS = {OPR, IF, SEND, OUT, IN, UNTIL};
-
-    // TODO Update operators
+    // TODO Check if those are all operators
     private static final String[] ASSIGN_OPS =
             {
                     "=",
@@ -74,4 +72,28 @@ public class Token {
                     "*",
                     "/",
             };
+
+    private static final String[] BOOL_OPS =
+            {
+                    "&",
+                    "|",
+                    "!",
+                    "=="
+            };
+
+    private static final String[] ARRAY_OPS =
+            {
+                    "<<",
+                    ">>",
+                    "//",
+                    "--"
+            };
+
+    private static final String[] IO_OPS =
+            {
+                    "<=",
+                    "=>"
+            };
+
+
 }

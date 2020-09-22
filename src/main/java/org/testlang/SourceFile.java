@@ -26,10 +26,11 @@ public class SourceFile {
     public char getSource() {
         try {
             int c = source.read();
-            if (c < 0)
+            if (c < 0) {
                 return EOT;
-            else
+            } else {
                 return (char) c;
+            }
         } catch (IOException ex) {
             return EOT;
         }
