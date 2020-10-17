@@ -1,6 +1,6 @@
 [
     numbers: col<number> = <3, 1, 5, 4, 2>;
-
+	nums: col<number> {5};
     n: number = numbers';
     i: number = 1;
 
