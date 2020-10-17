@@ -4,7 +4,10 @@ package org.testlang;
 
 public class Parser {
 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> refs/remotes/origin/master
 	private Token currentToken;
 	private Scanner scanner;
 
