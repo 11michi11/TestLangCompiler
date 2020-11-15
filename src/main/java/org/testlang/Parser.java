@@ -3,13 +3,16 @@ package org.testlang;
 
 
 public class Parser {
-
-
-	private Token currentToken;
 	private Scanner scanner;
+	public Parser(Scanner scanner) {
+		this.scanner = scanner;
+	}
+	private Token currentToken;
+	
 
 	public void parse() {
 		currentToken = scanner.scan();
+	System.out.println( " parse start" );
 		parseProgram();
 		if (currentToken.kind != TokenKind.EOT) {
 			//report syntactic error
@@ -29,13 +32,17 @@ public class Parser {
 		}
 	}
 
-	private void parseProgram() {
+	private Program parseProgram() {
+		Program program;
+		DeclarationList dl;
 		accept(TokenKind.LEFT_SQUARE);
 		while (currentToken.kind != TokenKind.RIGHT_SQUARE) {
 			parseDeclarationList();
 			parseStatement();
 		}
 		accept(TokenKind.RIGHT_SQUARE);
+		program = new Program(dl);
+		return program;
 	}
 
 	private void parseDeclarationList() {
@@ -152,19 +159,7 @@ public class Parser {
 		switch (currentToken.kind) {
 		case IDENTIFIER: 
 			parseIdentifier();
-			switch (currentToken.kind) {
-			case OPERATOR: 
-				acceptIt();
-				parseExpresion();
-				break;
-			case LEFT_PARAN:
-				acceptIt();
-				parseExpresion();
-				accept(TokenKind.RIGHT_PARAN);
-				break;
-			default:
-				break;
-			}
+			parseExpresion();
 			break;
 		case IF:
 		case UNTIL:
@@ -187,9 +182,42 @@ public class Parser {
 		}
 	}
 
+	
 	private void parseExpresion() {
+		parseExpresion1();
+		if (currentToken.isAssignOperator()) {
+			acceptIt();
+			parseExpresion();
+		}
+	}
+
+	private void parseExpresion1() {
+		parseExpresion2();
+		while (currentToken.isBoolOperator()) {
+			acceptIt();
+			parseExpresion2();
+		}
+	}
+	
+	private void parseExpresion2() {
+		parseExpresion3();
+		while (currentToken.isAddOperator()) {
+			acceptIt();
+			parseExpresion3();
+		}
+	}
+	
+	private void parseExpresion3() {
+		parseExpresion4();
+		while (currentToken.isMulOperator()) {
+			acceptIt();
+			parseExpresion4();
+		}
+	}
+	
+	private void parseExpresion4() {
 		parsePrimaryExpresion();
-		while (currentToken.kind == TokenKind.OPERATOR) {
+		while (currentToken.isArrOperator()) {
 			acceptIt();
 			parsePrimaryExpresion();
 		}

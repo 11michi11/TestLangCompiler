@@ -44,6 +44,27 @@ public class Token {
             return false;
     }
 
+    public boolean isBoolOperator() {
+        if (kind == OPERATOR)
+            return containsOperator(spelling, BOOL_OPS);
+        else
+            return false;
+    }
+
+    public boolean isArrOperator() {
+        if (kind == OPERATOR)
+            return containsOperator(spelling, ARRAY_OPS);
+        else
+            return false;
+    }
+
+    public boolean isIOOperator() {
+        if (kind == OPERATOR)
+            return containsOperator(spelling, IO_OPS);
+        else
+            return false;
+    }
+    
     private boolean containsOperator(String spelling, String[] OPS) {
         for (String op : OPS) {
             if (spelling.equals(op))
@@ -94,6 +115,8 @@ public class Token {
                     "<=",
                     "=>"
             };
+
+
 
 
 }
