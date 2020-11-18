@@ -1,6 +1,8 @@
 package org.testlang;
 
-
+import org.testlang.AST.*;
+import org.testlang.AST.Number;
+import org.testlang.AST.Void;
 
 public class Parser {
 	private Scanner scanner;
@@ -8,11 +10,10 @@ public class Parser {
 		this.scanner = scanner;
 	}
 	private Token currentToken;
-	
+
 
 	public void parse() {
-		currentToken = scanner.scan();
-	System.out.println( " parse start" );
+		System.out.println( " parse start" );
 		parseProgram();
 		if (currentToken.kind != TokenKind.EOT) {
 			//report syntactic error
@@ -20,57 +21,100 @@ public class Parser {
 	}
 
 	public void acceptIt() {
+		System.out.print("acceptIt() "+ currentToken.kind);
 		currentToken = scanner.scan();
+		System.out.println("   next token is: "+ currentToken.kind);
 	}
 
 	private void accept (TokenKind expectedKind) {
 		if (currentToken.kind == expectedKind) {
+			System.out.print("accept( "+ expectedKind + " ) ");
 			currentToken = scanner.scan();
+			System.out.println("next token is: "+ currentToken.kind);
 		} 
 		else {
-			// report syntactic error
+			System.out.println(currentToken.kind + " is not the expected token kind "+ expectedKind);
 		}
 	}
 
 	private Program parseProgram() {
 		Program program;
-		DeclarationList dl;
+		currentToken = scanner.scan();
+		DeclarationList dl = new DeclarationList();
+		StatementList sl = new StatementList();
 		accept(TokenKind.LEFT_SQUARE);
 		while (currentToken.kind != TokenKind.RIGHT_SQUARE) {
-			parseDeclarationList();
-			parseStatement();
+			Token first = currentToken;
+			switch (first.kind ) {
+			case IDENTIFIER:
+				acceptIt();
+				switch (currentToken.kind) {
+				case COLON:
+					parseDeclarationList(first,  dl);
+					break;
+				case OPERATOR:
+					parseStatementList(first);
+				default:
+					break;
+				}
+				break;
+			default:
+				break;
+			}
+			//parseDeclarationList(first,  dl);
+			//parseStatement();
 		}
 		accept(TokenKind.RIGHT_SQUARE);
 		program = new Program(dl);
 		return program;
 	}
 
-	private void parseDeclarationList() {
-		parseDeclaration();
+	private DeclarationList parseDeclarationList(Token first, DeclarationList dl) {
+		Declaration d = parseDeclaration(first);
+		if (!(d == null)) {
+			System.out.println("add declaration "+d.toString());
+			dl.add(d);
+		}else {
+			System.out.println("null- parse dl");
+		}
+
+		return dl;	
 	}
 
-	private void parseDeclaration() {
-		if (currentToken.kind == TokenKind.IDENTIFIER) {
-			parseVarDeclaration();
+	private Declaration parseDeclaration(Token first) {
+		Declaration declaration = new Declaration();
+		switch (first.kind ) {
+		case IDENTIFIER:
+			declaration = parseVarDeclaration(first);
+			break;
+		case NUMBER_TYPE:
+		case LETTER_TYPE:
+		case STATE_TYPE:
+		case COL_TYPE:
+		case VOID_TYPE:
+			declaration = parseOprDeclaration(currentToken.kind);
+			break;
+		default:
+			break;
 		}
-		else {
-			TokenKind oprType = currentToken.kind;
-			parseOprDeclaration(oprType);
-		}
+		return declaration;
 	}
 
-	private void parseVarDeclaration() {
-		parseIdentifier();
+	private Declaration parseVarDeclaration(Token first) {
+		Identifier i = parseIdentifier(first);
 		accept(TokenKind.COLON);
 		TokenKind type = currentToken.kind;
+		Type t =parseTypeDenoter();
 		switch (type) {
 		case NUMBER_TYPE: 
 		case LETTER_TYPE: 
 		case STATE_TYPE: 
-			acceptIt();
-			accept(TokenKind.OPERATOR);
-			parseLiteral(type);
+			if (currentToken.isAssignOperator()) {
+				accept(TokenKind.OPERATOR);
+				Literal l = parseLiteral(type);
+			}
 			accept(TokenKind.SEMICOLON);
+
 			break;
 		case COL_TYPE:
 			acceptIt();
@@ -99,12 +143,18 @@ public class Parser {
 		default:
 			break;
 		}
+		System.out.println(t+" here "+currentToken.kind);
+		Declaration declaration = new Declaration(i, t);
+		return declaration;
 	}
 
-	private void parseOprDeclaration(TokenKind type) {
-		parseTypeDenoter();
+	private Declaration parseOprDeclaration(TokenKind type) {
+		Identifier i;
+		Type t;
+		Literal l;		
+		t = parseTypeDenoter();
 		accept(TokenKind.OPR);
-		parseIdentifier();
+		i = parseIdentifier(currentToken);
 		accept(TokenKind.LEFT_PARAN);
 		parseParameter();
 		while (currentToken.kind == TokenKind.COMMA) {
@@ -123,49 +173,53 @@ public class Parser {
 				parseLiteral(type);
 				break;
 			case IDENTIFIER: 
-				parseIdentifier();
+				parseIdentifier(currentToken);
 				break;
 			default:
 				break;
 			}
 			accept(TokenKind.SEMICOLON);
 		}
+		Declaration declaration = new Declaration(i, t);
+		return declaration;
 	}
 
-	private void parseBlock() {
+	private Block parseBlock() {
+		Block block = null;
 		accept(TokenKind.LEFT_SQUARE);
 		while (currentToken.kind != TokenKind.RIGHT_SQUARE) {
-			parseVarDeclaration();
-			parseStatement();
+			parseVarDeclaration(currentToken);
+			parseStatementList(currentToken);
 		}
 		accept(TokenKind.RIGHT_SQUARE);
+		return block;
 	}
 
 	private void parseParameter() {
-		parseIdentifier();
+		parseIdentifier(currentToken);
 		accept(TokenKind.COLON);
 		parseTypeDenoter();
 	}
 
-	private void parseStatement() {
-		parseSingleStatement();
+	private void parseStatementList(Token first) {
+		parseSingleStatement(first);
 		while (currentToken.kind == TokenKind.SEMICOLON) {
 			acceptIt();
-			parseSingleStatement();
+			parseSingleStatement(first);
 		}
 	}
 
-	private void parseSingleStatement() {
-		switch (currentToken.kind) {
+	private void parseSingleStatement(Token first) {
+		switch (first.kind) {
 		case IDENTIFIER: 
-			parseIdentifier();
-			parseExpresion();
+			parseIdentifier(currentToken);
+			parseExpression();
 			break;
 		case IF:
 		case UNTIL:
 			acceptIt();
 			accept(TokenKind.LEFT_PARAN);
-			parseExpresion();
+			parseExpression();
 			accept(TokenKind.RIGHT_PARAN);
 			parseBlock();
 			break;
@@ -173,7 +227,7 @@ public class Parser {
 		case OUT:
 			acceptIt();
 			accept(TokenKind.OPERATOR);
-			parseExpresion();
+			parseExpression();
 			break;
 		case LEFT_SQUARE:
 			parseBlock();
@@ -182,61 +236,82 @@ public class Parser {
 		}
 	}
 
-	
-	private void parseExpresion() {
-		parseExpresion1();
+
+	private Expression parseExpression() {
+		Expression exp = parseExpression1();
 		if (currentToken.isAssignOperator()) {
-			acceptIt();
-			parseExpresion();
+			Operator op = parseOperator();
+			Expression tmp = parseExpression();
+			exp = new BinaryExpression( op, exp, tmp );
+		}
+		return exp;
+	}
+
+	private Operator parseOperator() {
+		if( currentToken.kind == TokenKind.OPERATOR ) {
+			Operator op = new Operator( currentToken );
+			currentToken = scanner.scan();
+			return op;
+		} else {
+			System.out.println( "Operator expected" );
+
+			return new Operator(new Token(TokenKind.OPERATOR, "?!?"));
 		}
 	}
 
-	private void parseExpresion1() {
-		parseExpresion2();
+	private Expression parseExpression1() {
+		Expression exp = parseExpression2();
 		while (currentToken.isBoolOperator()) {
-			acceptIt();
-			parseExpresion2();
+			Operator op = parseOperator();
+			Expression tmp = parseExpression2();
+			exp = new BinaryExpression( op, exp, tmp );
 		}
+		return exp;
 	}
-	
-	private void parseExpresion2() {
-		parseExpresion3();
+
+	private Expression parseExpression2() {
+		Expression exp = parseExpression3();
 		while (currentToken.isAddOperator()) {
-			acceptIt();
-			parseExpresion3();
+			Operator op = parseOperator();
+			Expression tmp = parseExpression3();
+			exp = new BinaryExpression( op, exp, tmp );
 		}
+		return exp;
 	}
-	
-	private void parseExpresion3() {
-		parseExpresion4();
+
+	private Expression parseExpression3() {
+		Expression exp = parseExpression4();
 		while (currentToken.isMulOperator()) {
-			acceptIt();
-			parseExpresion4();
+			Operator op = parseOperator();
+			Expression tmp = parseExpression4();
+			exp = new BinaryExpression( op, exp, tmp );
 		}
+		return exp;
 	}
-	
-	private void parseExpresion4() {
-		parsePrimaryExpresion();
+
+	private Expression parseExpression4() {
+		Expression exp = parsePrimaryExpression();
 		while (currentToken.isArrOperator()) {
-			acceptIt();
-			parsePrimaryExpresion();
+			Operator op = parseOperator();
+			Expression tmp = parsePrimaryExpression();
+			exp = new BinaryExpression( op, exp, tmp );
 		}
-
+		return exp;
 	}
 
-	private void parsePrimaryExpresion() {
+	private Expression parsePrimaryExpression() {
 		switch (currentToken.kind) {
 		case IDENTIFIER:
-			parseIdentifier();
+			parseIdentifier(currentToken);
 			if (currentToken.kind == TokenKind.LEFT_PARAN) {
 				acceptIt();
-				parseExpresionList();
+				parseExpressionList();
 				accept(TokenKind.RIGHT_PARAN);
 			}
 			break;
 		case OPERATOR:
 			acceptIt();
-			parsePrimaryExpresion();
+			parsePrimaryExpression();
 			break;
 		case LETTER_LITERAL:
 			parseLiteral(TokenKind.LETTER_TYPE);
@@ -249,34 +324,39 @@ public class Parser {
 			break;
 		case LEFT_PARAN:
 			acceptIt();
-			parseExpresion();
+			parseExpression();
 			accept(TokenKind.RIGHT_PARAN);
 			break;
 		default:
 			break;
 		}
+		return null;
 	}
 
-	private void parseExpresionList() {
-		parseExpresion();
+	private ParameterList parseExpressionList() {
+		parseExpression();
 		while (currentToken.kind == TokenKind.COMMA) {
 			acceptIt();
-			parseExpresion();
+			parseExpression();
 		}
-		
+
 	}
 
-	private void parseLiteral(TokenKind type) {
-		switch (type) {
+	private Literal parseLiteral(TokenKind type) {
+		Literal l;
+		l = new Literal(currentToken);
+		switch (currentToken.kind) {
 		case LETTER_LITERAL:
 			if (type == TokenKind.LETTER_TYPE) {
+				l = new Literal(currentToken);
 				acceptIt();
 			} else {
 				// report syntactic error
 			}
 			break;
-	    case NUMBER_LITERAL: 
+		case NUMBER_LITERAL: 
 			if (type == TokenKind.NUMBER_TYPE) {
+				l = new Literal(currentToken);
 				acceptIt();
 			} else {
 				// report syntactic error
@@ -284,6 +364,7 @@ public class Parser {
 			break;
 		case STATE_LITERAL: 
 			if (type == TokenKind.STATE_TYPE) {
+				l = new Literal(currentToken);
 				acceptIt();
 			} else {
 				// report syntactic error
@@ -294,11 +375,14 @@ public class Parser {
 			parseColectionLiteral();
 			break;
 		default:
+
 			break;
 		}
+		return l;
 	}
 
-	private void parseColectionLiteral() {
+	private CollectionLiteral parseColectionLiteral() {
+		CollectionLiteral colLit = null;
 		accept(TokenKind.LEFT_DIAMOND);
 		switch (currentToken.kind) {
 		case IDENTIFIER: 
@@ -328,28 +412,47 @@ public class Parser {
 			}
 		}
 		accept(TokenKind.RIGHT_DIAMOND);
+		return colLit;
 	}
 
-	private void parseTypeDenoter() {
+	private Type parseTypeDenoter() {
+		Type t = null;
 		switch (currentToken.kind) {
 		case NUMBER_TYPE:
+			t = new Number(currentToken);
+			acceptIt();
+			break;
 		case LETTER_TYPE:
+			t = new Letter(currentToken);
+			acceptIt();
+			break;
 		case STATE_TYPE:
+			t = new State(currentToken);
+			acceptIt();
+			break;
 		case VOID_TYPE: 
+			t = new Void(currentToken);
+			acceptIt();
+			break;
+		case COL_TYPE: 
+			t = new Collection(currentToken);
 			acceptIt();
 			break;
 		default:
 			// report syntactic error
 			break;
 		}
-
+		return t;
 	}
 
-	private void parseIdentifier() {
-		if (currentToken.kind == TokenKind.IDENTIFIER) {
-			acceptIt();
+	private Identifier parseIdentifier(Token token) {
+		Identifier i = null;
+		if (token.kind == TokenKind.IDENTIFIER) {
+			i = new Identifier(token);
+		}else {
+			System.out.println(currentToken.spelling);
 		}
-
+		return i;
 	}
 
 

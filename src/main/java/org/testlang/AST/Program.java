@@ -1,13 +1,18 @@
-package org.testlang;
+package org.testlang.AST;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-@Data
-@AllArgsConstructor
 public class Program extends AST {
 
-	DeclarationList DL;
-
+	public Program(DeclarationList dl2) {
+		setDl(dl2);
+	}
+	DeclarationList dl;
+	public void setDl(DeclarationList dl) {
+		this.dl = dl;
+	}
+	
+	public DeclarationList getDl() {
+		return dl;
+	}
 }
 

@@ -9,7 +9,6 @@ public class TestDriverScanner {
     public static void main(String[] args) {
         SourceFile in = new SourceFile(EXAMPLES_DIR + "loop.tl");
         Scanner s = new Scanner(in);
-        Parser p = new Parser(s);
 //        Token t = s.scan();
 //        while (t.kind != TokenKind.EOT) {
 //            System.out.println(t.kind + " " + t.spelling);
@@ -17,6 +16,7 @@ public class TestDriverScanner {
 //            t = s.scan();
 //            
 //        }
+        Parser p = new Parser(s);
         p.parse();
     }
 }
