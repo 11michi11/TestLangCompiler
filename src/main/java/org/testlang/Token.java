@@ -73,7 +73,7 @@ public class Token {
         return false;
     }
 
-    private static final TokenKind[] KEYWORDS = {OPR, SEND, OUT, IN, UNTIL, TRUE, FALSE, NUMBER_TYPE,
+    private static final TokenKind[] KEYWORDS = {OPR, VAR, SEND, OUT, IN, UNTIL, TRUE, FALSE, NUMBER_TYPE,
             LETTER_TYPE, STATE_TYPE, COL_TYPE, VOID_TYPE};
 
     // TODO Check if those are all operators

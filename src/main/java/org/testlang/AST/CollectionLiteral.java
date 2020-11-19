@@ -1,12 +1,22 @@
 package org.testlang.AST;
 
-import org.testlang.Token;
 
-public class CollectionLiteral extends Literal {
+import java.util.ArrayList;
+import java.util.List;
 
-	public CollectionLiteral(Token token) {
-		super(token);
-		// TODO Auto-generated constructor stub
+public class CollectionLiteral extends AST {
+
+	List<Literal> literalList;
+
+	public CollectionLiteral() {
+		literalList = new ArrayList<>();
 	}
 
+	public List<Literal> getLiteralList() {
+		return literalList;
+	}
+
+	public void addLiteral(Literal literal) {
+		literalList.add(literal);
+	}
 }

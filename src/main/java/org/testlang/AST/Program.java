@@ -3,16 +3,20 @@ package org.testlang.AST;
 
 public class Program extends AST {
 
-	public Program(DeclarationList dl2) {
-		setDl(dl2);
-	}
-	DeclarationList dl;
-	public void setDl(DeclarationList dl) {
-		this.dl = dl;
-	}
-	
-	public DeclarationList getDl() {
-		return dl;
-	}
+    DeclarationList declarationList;
+    StatementList statementList;
+
+    public Program(DeclarationList declarationList, StatementList statementList) {
+        this.declarationList = declarationList;
+        this.statementList = statementList;
+    }
+
+    public DeclarationList getDeclarationList() {
+        return declarationList;
+    }
+
+    public StatementList getStatementList() {
+        return statementList;
+    }
 }
 

@@ -2,8 +2,13 @@ package org.testlang.AST;
 
 public class VarExpression extends Expression {
 
-	public VarExpression() {
-		// TODO Auto-generated constructor stub
-	}
+    private Identifier identifier;
 
+    public VarExpression(Identifier identifier) {
+        this.identifier = identifier;
+    }
+
+    public Identifier getIdentifier() {
+        return identifier;
+    }
 }

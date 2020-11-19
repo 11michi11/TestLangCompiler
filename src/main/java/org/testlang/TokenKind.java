@@ -16,6 +16,7 @@ public enum TokenKind {
     VOID_TYPE("void"),
 
     OPR("opr"),
+    VAR("var"),
     IF("?"),
     SEND("send"),
     UNTIL("until"),

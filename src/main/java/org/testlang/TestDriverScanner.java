@@ -1,6 +1,8 @@
 package org.testlang;
 
 
+import org.testlang.AST.AST;
+
 public class TestDriverScanner {
 
     private static final String EXAMPLES_DIR = "src\\main\\resources\\";
@@ -17,6 +19,7 @@ public class TestDriverScanner {
 //            
 //        }
         Parser p = new Parser(s);
-        p.parse();
+        AST ast = p.parse();
+        new ASTViewer(ast);
     }
 }
