@@ -1,9 +1,14 @@
 package org.testlang.AST;
 
-public class OutStatement extends Statement{
+public class OutStatement extends Statement {
 
-	public OutStatement() {
-		// TODO Auto-generated constructor stub
+	private Expression expression;
+
+	public OutStatement(Expression expression) {
+		this.expression = expression;
 	}
 
+	public Expression getExpression() {
+		return expression;
+	}
 }

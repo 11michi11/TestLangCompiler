@@ -1,9 +1,6 @@
 [
-
-
- #   var one: number = 1;
-   var numbers: col<letter>;
-  numbers = <1, 2>;
+   var numbers: col<number>{2};
+   numbers = <1, 2>;
 
  var result1: letter;
     result1 = 'a';
@@ -25,10 +22,10 @@
 #	result = 2
 #    in => counter;
 #
-    until (counter > 0) [
-        result = result  + calculate(counter, result);
-        counter = counter - 1;
-    ]
+   # until (counter > 0) [
+  #      result = result  + calculate(counter, result);
+ #       counter = counter - 1;
+ #   ]
 #
 #    out <= result;
 #

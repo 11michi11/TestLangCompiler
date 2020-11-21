@@ -60,7 +60,8 @@ public class ASTViewer
         } else if (ast instanceof State) {
             node.setUserObject("State");
         } else if (ast instanceof Collection) {
-            node.setUserObject("Collection<" + ((Collection) ast).getCollectionType().getSpelling() + ">");
+            var collection = ((Collection) ast);
+            node.setUserObject("Collection<" + collection.getCollectionType().getSpelling() + ">{" + collection.getSize().getSpelling() + "}");
         } else if (ast instanceof Letter) {
             node.setUserObject("Letter");
         } else if (ast instanceof Void) {

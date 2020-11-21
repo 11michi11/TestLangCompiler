@@ -11,6 +11,7 @@ b: char = 'a';
 c: bool = false;
 
 d: col<type> = <5,6>
+var e: col<type>{size};
 
 opr name (g: int, j: char): int [
 
