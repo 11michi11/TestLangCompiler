@@ -1,9 +1,16 @@
 [
-   var numbers: col<number>{2};
-   numbers = <1, 2>;
+ # var numbers: col<number>{2};
+ # numbers = <1, 2>;
 
- var result1: letter;
-    result1 = 'a';
+
+ #  ? (!false) [
+ #   var a: number;
+ #  ]
+
+   var a: number;
+   a = 5;
+   out => a;
+
 
 # var count1: number;
   #   var result2: number;

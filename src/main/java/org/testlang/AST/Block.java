@@ -1,5 +1,7 @@
 package org.testlang.AST;
 
+import org.testlang.Visitor;
+
 public class Block extends AST {
 
     private DeclarationList declarationList;
@@ -16,5 +18,10 @@ public class Block extends AST {
 
     public StatementList getStatementList() {
         return statementList;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitBlock(this, arg);
     }
 }

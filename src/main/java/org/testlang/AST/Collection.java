@@ -1,30 +1,35 @@
 package org.testlang.AST;
 
 import org.testlang.Token;
+import org.testlang.Visitor;
 
-public class Collection extends Type {
+public class Collection extends TypeDenoter {
 
-	private Type collectionType;
-	private NumberLiteral size;
+    private TypeDenoter collectionTypeDenoter;
+    private NumberLiteral size;
 
-	public Collection(Token token) {
-		super(token);
-		// TODO Auto-generated constructor stub
-	}
+    public Collection(Token token) {
+        super(token);
+    }
 
-	public Type getCollectionType() {
-		return collectionType;
-	}
+    public TypeDenoter getCollectionType() {
+        return collectionTypeDenoter;
+    }
 
-	public void setCollectionType(Type collectionType) {
-		this.collectionType = collectionType;
-	}
+    public void setCollectionType(TypeDenoter collectionTypeDenoter) {
+        this.collectionTypeDenoter = collectionTypeDenoter;
+    }
 
-	public NumberLiteral getSize() {
-		return size;
-	}
+    public NumberLiteral getSize() {
+        return size;
+    }
 
-	public void setSize(NumberLiteral size) {
-		this.size = size;
-	}
+    public void setSize(NumberLiteral size) {
+        this.size = size;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitCollection(this, arg);
+    }
 }

@@ -62,13 +62,13 @@ public class Parser {
         Identifier identifier = parseIdentifier();
         accept(TokenKind.COLON);
         TokenKind tokenKind = currentToken.kind;
-        Type type = parseTypeDenoter();
+        TypeDenoter typeDenoter = parseTypeDenoter();
 
         if (tokenKind == TokenKind.COL_TYPE) {
             accept(TokenKind.LEFT_DIAMOND);
-            Collection collectionVarType = (Collection) type;
-            Type collectionType = parseTypeDenoter();
-            collectionVarType.setCollectionType(collectionType);
+            Collection collectionVarType = (Collection) typeDenoter;
+            TypeDenoter collectionTypeDenoter = parseTypeDenoter();
+            collectionVarType.setCollectionType(collectionTypeDenoter);
             accept(TokenKind.RIGHT_DIAMOND);
             if (currentToken.kind == TokenKind.LEFT_CURLY) {
                 accept(TokenKind.LEFT_CURLY);
@@ -86,15 +86,15 @@ public class Parser {
             }
         }
         accept(TokenKind.SEMICOLON);
-        return new VarDeclaration(identifier, type);
+        return new VarDeclaration(identifier, typeDenoter);
     }
 
     // TODO this is not done
     private Declaration parseOprDeclaration() {
         Identifier identifier;
-        Type type;
+        TypeDenoter typeDenoter;
         Literal literal;
-        type = parseTypeDenoter();
+        typeDenoter = parseTypeDenoter();
         accept(TokenKind.OPR);
         identifier = parseIdentifier();
         accept(TokenKind.LEFT_PARAN);
@@ -123,7 +123,7 @@ public class Parser {
             }
             accept(TokenKind.SEMICOLON);
         }
-        return new OprDeclaration(identifier, type);
+        return new OprDeclaration(identifier, typeDenoter);
     }
 
     private Block parseBlock() {
@@ -175,15 +175,17 @@ public class Parser {
                 accept(TokenKind.IN);
                 accept(TokenKind.OPERATOR);
                 Expression expression = parseExpression();
+                accept(TokenKind.SEMICOLON);
                 return new InStatement(expression);
             }
             case OUT -> {
                 accept(TokenKind.OUT);
                 accept(TokenKind.OPERATOR);
                 Expression expression = parseExpression();
+                accept(TokenKind.SEMICOLON);
                 return new OutStatement(expression);
             }
-            default -> throw new UnsupportedOperationException("Token " + currentToken.spelling + " is currently not handled");
+            default -> throw new UnsupportedOperationException("Token " + currentToken.spelling + " is not legal in this place");
         }
     }
 
@@ -320,8 +322,11 @@ public class Parser {
                 if (tokenKind == TokenKind.NUMBER_TYPE) {
                     literal = new NumberLiteral(currentToken);
                     acceptIt();
+                } else if (tokenKind == TokenKind.LETTER_TYPE) {
+                    literal = new LetterLiteral(currentToken);
+                    acceptIt();
                 } else {
-                    throw new IllegalArgumentException("Token " + currentToken.spelling + " is not a number literal");
+                    throw new IllegalArgumentException("Token " + currentToken.spelling + " is not a number literal or letter literal");
                 }
                 break;
             case FALSE:
@@ -343,8 +348,10 @@ public class Parser {
         CollectionLiteral collectionLiteral = new CollectionLiteral();
         accept(TokenKind.LEFT_DIAMOND);
         switch (currentToken.kind) {
-            case LETTER_LITERAL:
+            case SINGLE_QUOTE:
+                accept(TokenKind.SINGLE_QUOTE);
                 collectionLiteral.addLiteral(parseLiteral(TokenKind.LETTER_TYPE));
+                accept(TokenKind.SINGLE_QUOTE);
                 break;
             case NUMBER_LITERAL:
                 collectionLiteral.addLiteral(parseLiteral(TokenKind.NUMBER_TYPE));
@@ -358,8 +365,10 @@ public class Parser {
         while (currentToken.kind == TokenKind.COMMA) {
             acceptIt();
             switch (currentToken.kind) {
-                case LETTER_LITERAL:
+                case SINGLE_QUOTE:
+                    accept(TokenKind.SINGLE_QUOTE);
                     collectionLiteral.addLiteral(parseLiteral(TokenKind.LETTER_TYPE));
+                    accept(TokenKind.SINGLE_QUOTE);
                     break;
                 case NUMBER_LITERAL:
                     collectionLiteral.addLiteral(parseLiteral(TokenKind.NUMBER_TYPE));
@@ -375,8 +384,8 @@ public class Parser {
         return collectionLiteral;
     }
 
-    private Type parseTypeDenoter() {
-        Type type = switch (currentToken.kind) {
+    private TypeDenoter parseTypeDenoter() {
+        TypeDenoter typeDenoter = switch (currentToken.kind) {
             case NUMBER_TYPE -> new Number(currentToken);
             case LETTER_TYPE -> new Letter(currentToken);
             case STATE_TYPE -> new State(currentToken);
@@ -385,7 +394,7 @@ public class Parser {
             default -> throw new IllegalArgumentException("Token " + currentToken.spelling + " is not a type denoter");
         };
         acceptIt();
-        return type;
+        return typeDenoter;
     }
 
     private Identifier parseIdentifier() {

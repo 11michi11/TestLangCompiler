@@ -163,7 +163,7 @@ public class Scanner {
 
             case '!':
                 takeIt();
-                return EXCLAMATION;
+                return OPERATOR;
 
             case SourceFile.EOT:
                 return EOT;

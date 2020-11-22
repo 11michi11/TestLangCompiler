@@ -1,16 +1,17 @@
 package org.testlang.AST;
 
 import org.testlang.Token;
+import org.testlang.Visitor;
 
 public class Identifier extends Terminal {
 
 	public Identifier(Token token) {
 		super(token);
 	}
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
-	
+
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitIdentifier(this, arg);
+    }
 }

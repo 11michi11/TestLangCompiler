@@ -1,5 +1,7 @@
 package org.testlang.AST;
 
+import org.testlang.Visitor;
+
 public class UnaryExpression extends Expression {
 
     private Operator operator;
@@ -16,5 +18,10 @@ public class UnaryExpression extends Expression {
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitUnaryExpression(this, arg);
     }
 }

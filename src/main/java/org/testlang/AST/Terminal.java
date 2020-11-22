@@ -2,7 +2,7 @@ package org.testlang.AST;
 
 import org.testlang.Token;
 
-public class Terminal extends AST {
+public abstract class Terminal extends AST {
 
     private String spelling;
 

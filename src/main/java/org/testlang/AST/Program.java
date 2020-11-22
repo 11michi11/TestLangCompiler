@@ -1,6 +1,8 @@
 package org.testlang.AST;
 
 
+import org.testlang.Visitor;
+
 public class Program extends AST {
 
     DeclarationList declarationList;
@@ -17,6 +19,10 @@ public class Program extends AST {
 
     public StatementList getStatementList() {
         return statementList;
+    }
+
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitProgram(this, arg);
     }
 }
 

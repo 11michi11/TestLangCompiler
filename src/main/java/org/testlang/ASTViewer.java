@@ -53,8 +53,8 @@ public class ASTViewer
                 node.add(createTree(d));
         } else if (ast instanceof VarDeclaration) {
             node.setUserObject("VarDeclaration");
-            node.add(createTree(((VarDeclaration) ast).identifier));
-            node.add(createTree(((VarDeclaration) ast).type));
+            node.add(createTree(((VarDeclaration) ast).getIdentifier()));
+            node.add(createTree(((VarDeclaration) ast).getType()));
         } else if (ast instanceof Number) {
             node.setUserObject("Number");
         } else if (ast instanceof State) {
@@ -68,7 +68,8 @@ public class ASTViewer
             node.setUserObject("Void");
         } else if (ast instanceof OprDeclaration) {
             node.setUserObject("FunctionDeclaration");
-            node.add(createTree(((OprDeclaration) ast).identifier));
+            node.add(createTree(((OprDeclaration) ast).getIdentifier()));
+            node.add(createTree(((OprDeclaration) ast).getType()));
 //			node.add( createTree( ((FunctionDeclaration)ast).params ) );
 //			node.add( createTree( ((FunctionDeclaration)ast).block ) );
 //			node.add( createTree( ((FunctionDeclaration)ast).retExp ) );
@@ -85,12 +86,12 @@ public class ASTViewer
             node.add(createTree(((IfStatement) ast).getExpression()));
             node.add(createTree(((IfStatement) ast).getBlock()));
         } else if (ast instanceof UntilStatement) {
-            node.setUserObject("OutStatement");
+            node.setUserObject("UntilStatement");
 //			node.add( createTree( ((UntilStatement)ast).exp ) );
 //			node.add( createTree( ((UntilStatement)ast).stats ) );
         } else if (ast instanceof OutStatement) {
-            node.setUserObject("SayStatement");
-//			node.add( createTree( ((OutStatement)ast).exp ) );
+            node.setUserObject("OutStatement");
+            node.add(createTree(((OutStatement) ast).getExpression()));
         } else if (ast instanceof BinaryExpression) {
             node.setUserObject("BinaryExpression");
             node.add(createTree(((BinaryExpression) ast).getOperator()));

@@ -7,4 +7,4 @@ out/
 .project
 .idea
 .settings
-.class
+*.class

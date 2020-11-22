@@ -1,9 +1,21 @@
 package org.testlang.AST;
 
+import org.testlang.Visitor;
+
 public class InStatement extends Statement {
 
+    private final Expression expression;
+
     public InStatement(Expression expression) {
-        // TODO Auto-generated constructor stub
+        this.expression = expression;
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitInStatement(this, arg);
+    }
 }

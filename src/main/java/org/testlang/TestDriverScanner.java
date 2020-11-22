@@ -2,6 +2,7 @@ package org.testlang;
 
 
 import org.testlang.AST.AST;
+import org.testlang.AST.Program;
 
 public class TestDriverScanner {
 
@@ -10,16 +11,11 @@ public class TestDriverScanner {
 
     public static void main(String[] args) {
         SourceFile in = new SourceFile(EXAMPLES_DIR + "loop.tl");
-        Scanner s = new Scanner(in);
-//        Token t = s.scan();
-//        while (t.kind != TokenKind.EOT) {
-//            System.out.println(t.kind + " " + t.spelling);
-//
-//            t = s.scan();
-//            
-//        }
-        Parser p = new Parser(s);
-        AST ast = p.parse();
+        Scanner scanner = new Scanner(in);
+        Parser parser = new Parser(scanner);
+        AST ast = parser.parse();
         new ASTViewer(ast);
+        Checker checker = new Checker();
+        checker.check((Program) ast);
     }
 }

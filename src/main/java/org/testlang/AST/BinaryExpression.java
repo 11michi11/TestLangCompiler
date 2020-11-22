@@ -1,5 +1,7 @@
 package org.testlang.AST;
 
+import org.testlang.Visitor;
+
 public class BinaryExpression extends Expression {
 
 
@@ -23,5 +25,10 @@ public class BinaryExpression extends Expression {
 
     public Expression getOperand2() {
         return operand2;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitBinaryExpression(this, arg);
     }
 }

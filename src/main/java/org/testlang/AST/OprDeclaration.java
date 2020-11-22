@@ -1,11 +1,16 @@
 package org.testlang.AST;
 
 
+import org.testlang.Visitor;
+
 public class OprDeclaration extends Declaration {
 
-	public OprDeclaration(Identifier id, Type t) {
-		super(id, t);
-		// TODO Auto-generated constructor stub
-	}
+    public OprDeclaration(Identifier id, TypeDenoter t) {
+        super(id, t);
+    }
 
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitOperationDeclaration(this, arg);
+    }
 }

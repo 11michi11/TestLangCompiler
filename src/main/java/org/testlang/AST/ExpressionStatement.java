@@ -1,5 +1,7 @@
 package org.testlang.AST;
 
+import org.testlang.Visitor;
+
 public class ExpressionStatement extends Statement {
 
     private Expression expression;
@@ -10,5 +12,10 @@ public class ExpressionStatement extends Statement {
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitExpressionStatement(this, arg);
     }
 }

@@ -1,5 +1,7 @@
 package org.testlang.AST;
 
+import org.testlang.Visitor;
+
 public class NumberLitExpression extends LiteralExpression {
 
     private NumberLiteral literal;
@@ -10,5 +12,10 @@ public class NumberLitExpression extends LiteralExpression {
 
     public NumberLiteral getLiteral() {
         return literal;
+    }
+
+    @Override
+    public Object visit(Visitor visitor, Object arg) {
+        return visitor.visitNumberLitExpression(this, arg);
     }
 }
