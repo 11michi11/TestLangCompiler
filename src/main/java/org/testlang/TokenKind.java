@@ -42,7 +42,6 @@ public enum TokenKind {
     SINGLE_QUOTE("'"),
     EXCLAMATION("!"),
     EOT,
-
     ERROR;
 
 

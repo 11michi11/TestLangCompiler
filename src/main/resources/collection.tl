@@ -2,7 +2,8 @@
     var numbers: col<number>;
     numbers = <3, 1, 5, 4, 2>;
 	var nums: col<number> {5};
-    var n: number = numbers';
+    var n: number;
+    n = numbers';
     var i: number;
     i = 1;
 

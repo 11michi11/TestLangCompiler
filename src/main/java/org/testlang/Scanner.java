@@ -61,7 +61,6 @@ public class Scanner {
                 takeIt();
 
             return NUMBER_LITERAL;
-
         }
         switch (currentChar) {
             case '+':
@@ -76,7 +75,6 @@ public class Scanner {
                     return OPERATOR;
                 }
                 return OPERATOR;
-
             case '/':
                 takeIt();
                 if (currentChar == '/') {
@@ -84,7 +82,6 @@ public class Scanner {
                     return OPERATOR;
                 }
                 return OPERATOR;
-
             case '-':
                 takeIt();
                 if (currentChar == '-') {

@@ -210,8 +210,6 @@ public class Encoder implements Visitor {
         if (operator.equals("=")) {
             var varDeclaration = ((VarExpression)binaryExpression.getOperand1()).getDeclaration();
             encodeStore(varDeclaration, new Frame(frame2, valSize1), valSize1);
-        } else if(operator.equals("")) {
-            
         }
 
         return valSize;
