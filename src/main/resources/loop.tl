@@ -1,5 +1,6 @@
 [
     var counter: number;
+    var result: number;
     in => counter;
 
     until (counter > 0) [
@@ -10,7 +11,8 @@
     out <= result;
 
     number opr calculate(a: number, b: number): number [
-        result: number = a * b + 2;
+        var result: number;
+        result = a * b + 2;
         send result;
     ]
 ]
