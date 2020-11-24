@@ -129,7 +129,7 @@ public class ASTViewer
         } else if (ast instanceof CollectionLiteral) {
             node.setUserObject("CollectionLiteral");
 
-            for (Literal d : ((CollectionLiteral) ast).getLiteralList())
+            for (LiteralExpression d : ((CollectionLiteral) ast).getLiteralList())
                 node.add(createTree(d));
         } else if (ast instanceof Identifier) {
             node.setUserObject("Identifier " + ((Identifier) ast).getSpelling());

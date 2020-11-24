@@ -217,7 +217,7 @@ public class Checker implements Visitor {
     public Object visitCollectionLiteral(CollectionLiteral collectionLiteral, Object arg) {
         List<Type> types = new ArrayList<>();
 
-        for (Literal literal : collectionLiteral.getLiteralList()) {
+        for (LiteralExpression literal : collectionLiteral.getLiteralList()) {
             types.add((Type) literal.visit(this, null));
         }
         return types;

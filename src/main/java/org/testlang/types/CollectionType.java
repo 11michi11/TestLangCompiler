@@ -1,5 +1,10 @@
 package org.testlang.types;
 
+import org.testlang.AST.Collection;
+import org.testlang.AST.NumberLiteral;
+import org.testlang.Token;
+import org.testlang.TokenKind;
+
 import java.util.Objects;
 
 public class CollectionType extends Type {
@@ -7,7 +12,9 @@ public class CollectionType extends Type {
     private Type collectionType;
 
     public CollectionType(int size, Type collectionType) {
-        super();
+        super(new Collection(new Token(TokenKind.COL_TYPE,TokenKind.COL_TYPE.getSpelling()),
+                collectionType.getTypeDenoter(),
+                new NumberLiteral(new Token(TokenKind.NUMBER_LITERAL,Integer.toString(size)))));
         this.size = size;
         this.collectionType = collectionType;
     }

@@ -350,14 +350,14 @@ public class Parser {
         switch (currentToken.kind) {
             case SINGLE_QUOTE:
                 accept(TokenKind.SINGLE_QUOTE);
-                collectionLiteral.addLiteral(parseLiteral(TokenKind.LETTER_TYPE));
+                collectionLiteral.addLiteral(new LetterLitExpression((LetterLiteral) parseLiteral(TokenKind.LETTER_TYPE)));
                 accept(TokenKind.SINGLE_QUOTE);
                 break;
             case NUMBER_LITERAL:
-                collectionLiteral.addLiteral(parseLiteral(TokenKind.NUMBER_TYPE));
+                collectionLiteral.addLiteral(new NumberLitExpression((NumberLiteral) parseLiteral(TokenKind.NUMBER_TYPE)));
                 break;
             case STATE_LITERAL:
-                collectionLiteral.addLiteral(parseLiteral(TokenKind.STATE_TYPE));
+                collectionLiteral.addLiteral(new StateLitExpression((StateLiteral) parseLiteral(TokenKind.STATE_TYPE)));
                 break;
             default:
                 break;
@@ -367,14 +367,14 @@ public class Parser {
             switch (currentToken.kind) {
                 case SINGLE_QUOTE:
                     accept(TokenKind.SINGLE_QUOTE);
-                    collectionLiteral.addLiteral(parseLiteral(TokenKind.LETTER_TYPE));
+                    collectionLiteral.addLiteral(new LetterLitExpression((LetterLiteral) parseLiteral(TokenKind.LETTER_TYPE)));
                     accept(TokenKind.SINGLE_QUOTE);
                     break;
                 case NUMBER_LITERAL:
-                    collectionLiteral.addLiteral(parseLiteral(TokenKind.NUMBER_TYPE));
+                    collectionLiteral.addLiteral(new NumberLitExpression((NumberLiteral) parseLiteral(TokenKind.NUMBER_TYPE)));
                     break;
                 case STATE_LITERAL:
-                    collectionLiteral.addLiteral(parseLiteral(TokenKind.STATE_TYPE));
+                    collectionLiteral.addLiteral(new StateLitExpression((StateLiteral) parseLiteral(TokenKind.STATE_TYPE)));
                     break;
                 default:
                     break;

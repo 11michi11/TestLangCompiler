@@ -1,19 +1,18 @@
 [
-  var numbers: col<number>{2};
-  numbers = <1, 2>;
-
-   var a: number;
-   a = 5;
-
-   ? (!false) [
-    var a: number;
-   ]
-
-    out => a;
+ # var numbers: col<number>{2};
+ # numbers = <1, 2>;
 
 
- var result1: letter;
-    result1 = 'a';
+ #  ? (!false) [
+ #   var a: number;
+ #  ]
+
+# var a: col<letter>{10};
+#a = <'H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'>;
+ var b: number;
+ b = 5;
+  out => b;
+
 
 # var count1: number;
   #   var result2: number;

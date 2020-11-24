@@ -8,17 +8,17 @@ import java.util.List;
 
 public class CollectionLiteral extends AST {
 
-	List<Literal> literalList;
+	List<LiteralExpression> literalList;
 
 	public CollectionLiteral() {
         literalList = new ArrayList<>();
     }
 
-    public List<Literal> getLiteralList() {
+    public List<LiteralExpression> getLiteralList() {
         return literalList;
     }
 
-    public void addLiteral(Literal literal) {
+    public void addLiteral(LiteralExpression literal) {
         literalList.add(literal);
     }
 

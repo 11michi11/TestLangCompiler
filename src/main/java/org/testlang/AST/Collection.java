@@ -12,6 +12,12 @@ public class Collection extends TypeDenoter {
         super(token);
     }
 
+    public Collection(Token token, TypeDenoter collectionTypeDenoter, NumberLiteral size) {
+        super(token);
+        this.collectionTypeDenoter = collectionTypeDenoter;
+        this.size = size;
+    }
+
     public TypeDenoter getCollectionType() {
         return collectionTypeDenoter;
     }

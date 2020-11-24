@@ -7,9 +7,11 @@
  #   var a: number;
  #  ]
 
-   var a: number;
-   a = 5;
-   out => a;
+# var a: col<letter>{10};
+#a = <'H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'>;
+ var b: number;
+ b = 5;
+  out => b;
 
 
 # var count1: number;
