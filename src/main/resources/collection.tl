@@ -1,14 +1,17 @@
 [
-    numbers: col<number> = <3, 1, 5, 4, 2>;
-	nums: col<number> {5};
-    n: number = numbers';
-    i: number = 1;
+    var numbers: col<number>;
+    numbers = <3, 1, 5, 4, 2>;
+	var nums: col<number> {5};
+    var n: number = numbers';
+    var i: number;
+    i = 1;
 
     until (i < n) [
-        j: number = 1;
+        var j: number = 1;
         until (j < n-i) [
             ? (numbers<j> > numbers<j+1>) [
-                temp: number = numbers<j>;
+                var temp: number;
+                temp =  = numbers<j>;
                 numbers<j> = numbers<j+1>;
                 numbers<j+1> = temp;
             ]
