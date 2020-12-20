@@ -1,14 +1,18 @@
 [
-    letters: col<letter> = <'a', 'b', 'b', 'd', 'e'>;
-    otherLetters: col<letter> = <'f', 'g', h'>;
+    var letters: col<letter>;
+    letters  = <'a', 'b', 'b', 'd', 'e'>;
+    var otherLetters: col<letter>;
+     otherLetters = <'f', 'g', h'>
 
     # array concatenation
 
     letters = letters + otherLetters;
-    notPrinted: col<letter>{10}; # array of typeDenoter letter with fixed size of 5
+    var notPrinted: col<letter>{10}; # array of type letter with fixed size of 5
 
-    size: number = letters';
-    shouldPrint: state = false;
+    var size: number;
+    size = letters';
+    var shouldPrint: state;
+    shouldPrint = false;
 
     until (size == 0) [
         ? (shouldPrint) [

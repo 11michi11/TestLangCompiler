@@ -2,7 +2,7 @@
     var letters: col<letter>;
     letters  = <'a', 'b', 'b', 'd', 'e'>;
     var otherLetters: col<letter>;
-     otherLetters = <'f', 'g', h'>
+    otherLetters = <'f', 'g', h'>
 
     # array concatenation
 
