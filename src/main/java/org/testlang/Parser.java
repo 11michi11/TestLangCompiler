@@ -201,7 +201,7 @@ public class Parser {
     }
 
     private Operator parseOperator() {
-        if (currentToken.kind == TokenKind.OPERATOR) {
+        if (currentToken.kind == TokenKind.OPERATOR || currentToken.isBoolOperator()) {
             Operator op = new Operator(currentToken);
             currentToken = scanner.scan();
             return op;

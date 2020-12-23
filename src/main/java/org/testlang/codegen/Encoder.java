@@ -77,7 +77,7 @@ public class Encoder implements Visitor {
     @Override
     public Object visitProgram(Program program, Object arg) {
         int before = nextAdr;
-        emit(Machine.JUMPop, 0, Machine.CB, 0);
+//        emit(Machine.JUMPop, 0, Machine.CB, 0);
         int size = (int) program.getDeclarationList().visit(this, new Frame());
         patch(before, nextAdr);
 
@@ -92,7 +92,16 @@ public class Encoder implements Visitor {
 
     @Override
     public Object visitBlock(Block block, Object arg) {
-        return null;
+        int before = nextAdr;
+        emit(Machine.JUMPop, 0, Machine.CB, 0);
+        int size = (int) block.getDeclarationList().visit(this, arg);
+        patch(before, nextAdr);
+
+        if (size > 0) {
+            emit(Machine.PUSHop, 0, 0, size);
+        }
+        block.getStatementList().visit(this, arg);
+        return size;
     }
 
     @Override
@@ -149,12 +158,39 @@ public class Encoder implements Visitor {
 
     @Override
     public Object visitIfStatement(IfStatement ifStatement, Object arg) {
-        return null;
+        Frame frame = (Frame) arg;
+        int jumpIfAddr, jumpAddr;
+
+        // Evaluate if expression
+        int valSize = (int) ifStatement.getExpression().visit(this, frame);
+        jumpIfAddr = nextAdr;
+        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+
+        // Evaluate if block
+        ifStatement.getBlock().visit(this, frame);
+        jumpAddr = nextAdr;
+
+        patch(jumpIfAddr, nextAdr);
+//        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+//        patch(jumpAddr, nextAdr);
+
+        return 0;
     }
 
     @Override
     public Object visitUntilStatement(UntilStatement untilStatement, Object arg) {
-        return null;
+        Frame frame = (Frame) arg;
+        int jumpAdr, loopAdr;
+
+        jumpAdr = nextAdr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        loopAdr = nextAdr;
+        untilStatement.getBlock().visit(this, frame);
+        patch(jumpAdr, nextAdr);
+
+        untilStatement.getExpression().visit(this, frame);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAdr);
+        return 0;
     }
 
     @Override
@@ -222,6 +258,7 @@ public class Encoder implements Visitor {
                             address.getAddress().getLevel()), address.getAddress().getDisplacement() + i);
                 }
             } else {
+                // Store single variable
                 int valSize1 = (int) binaryExpression.getOperand2().visit(this, frame);
                 encodeStore(varDeclaration, new Frame(frame, valSize1), valSize1);
             }
@@ -280,6 +317,25 @@ public class Encoder implements Visitor {
 
     @Override
     public Object visitOperator(Operator operator, Object arg) {
+        Frame frame = (Frame) arg;
+        switch (operator.getSpelling()) {
+            case "+" -> emit(Machine.CALLop, 0, Machine.PBr, Machine.addDisplacement);
+            case "-" -> emit(Machine.CALLop, 0, Machine.PBr, Machine.subDisplacement);
+            case "*" -> emit(Machine.CALLop, 0, Machine.PBr, Machine.multDisplacement);
+            case "/" -> emit(Machine.CALLop, 0, Machine.PBr, Machine.divDisplacement);
+            case "==" -> {
+                emit(Machine.LOADLop, 0, 0, frame.getSize() / 2);
+                emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+            }
+            case ">" -> {
+                emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.gtDisplacement);
+            }
+            case "<" -> {
+                emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.ltDisplacement);
+            }
+
+        }
+
         return operator.getSpelling();
     }
 
@@ -304,7 +360,11 @@ public class Encoder implements Visitor {
 
     @Override
     public Object visitStateLitExpression(StateLitExpression stateLitExpression, Object arg) {
-        return null;
+        Frame frame = (Frame) arg;
+        int valSize = (int) stateLitExpression.getType().getTypeDenoter().visit(this, null);
+        int literal = (int) stateLitExpression.getLiteral().visit(this, null);
+        emit(Machine.LOADLop, 1, 0, literal);
+        return valSize;
     }
 
     @Override
@@ -313,9 +373,6 @@ public class Encoder implements Visitor {
         int startDisplacement = frame.getSize();
         int extraSize;
 
-        // Don't reverse now
-//        var reversedList = new ArrayList<>(collectionLiteral.getLiteralList());
-//        Collections.reverse(reversedList);
         for (LiteralExpression literal : collectionLiteral.getLiteralList()) {
             extraSize = (int) literal.visit(this, arg);
             arg = new Frame(frame, extraSize);
@@ -331,7 +388,7 @@ public class Encoder implements Visitor {
 
     @Override
     public Object visitStateLiteral(StateLiteral stateLiteral, Object arg) {
-        return null;
+        return stateLiteral.getSpelling().equals("true") ? 1 : 0;
     }
 
     @Override

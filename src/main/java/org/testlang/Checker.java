@@ -123,7 +123,7 @@ public class Checker implements Visitor {
             }
         }
 
-        if (operator.equals("==")) {
+        if (operator.equals("==") || operator.equals("<") || operator.equals(">")) {
             binaryExpression.setType(new StateType());
         } else {
             binaryExpression.setType(operand1Type);

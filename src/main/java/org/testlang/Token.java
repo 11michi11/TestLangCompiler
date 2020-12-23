@@ -45,10 +45,8 @@ public class Token {
     }
 
     public boolean isBoolOperator() {
-        if (kind == OPERATOR)
-            return containsOperator(spelling, BOOL_OPS);
-        else
-            return false;
+        // Check spelling without checking if it's token to include < and > as those are not only operators
+        return containsOperator(spelling, BOOL_OPS);
     }
 
     public boolean isArrOperator() {
@@ -99,7 +97,9 @@ public class Token {
                     "&",
                     "|",
                     "!",
-                    "=="
+                    "==",
+                    ">",
+                    "<"
             };
 
     private static final String[] ARRAY_OPS =
