@@ -159,14 +159,19 @@ public class Encoder implements Visitor {
 
     @Override
     public Object visitOutStatement(OutStatement outStatement, Object arg) {
-        outStatement.getExpression().visit(this, arg);
+        Frame frame = (Frame) arg;
         Type type = outStatement.getExpression().getType();
         if (type instanceof NumberType) {
+            outStatement.getExpression().visit(this, arg);
             emit(Machine.CALLop, 0, Machine.PBr, Machine.putintDisplacement);
         } else if (type instanceof LetterType) {
+            outStatement.getExpression().visit(this, arg);
             emit(Machine.CALLop, 0, Machine.PBr, Machine.putDisplacement);
         } else if (type instanceof CollectionType) {
-            // TODO WRONG
+            // Get collection address
+            var declaration = ((VarExpression) outStatement.getExpression()).getDeclaration();
+            var address = ((KnownAddress) declaration.getEntity()).getAddress();
+            int typeSize = (int) ((Collection) declaration.getType()).getCollectionType().visit(this, arg);
             // Print n time value from stack as the collection's elements are on the stack
             var elements = ((CollectionType) type).getSize();
             // Decide what type of put to use
@@ -177,6 +182,8 @@ public class Encoder implements Visitor {
                 machinePutType = Machine.putintDisplacement;
             }
             for (int i = 0; i < elements; i++) {
+                emit(Machine.LOADop, typeSize, displayRegister(frame.getLevel(),
+                        address.getLevel()), address.getDisplacement() + i);
                 emit(Machine.CALLop, 0, Machine.PBr, machinePutType);
             }
         }
@@ -194,24 +201,41 @@ public class Encoder implements Visitor {
     @Override
     public Object visitBinaryExpression(BinaryExpression binaryExpression, Object arg) {
         Frame frame = (Frame) arg;
-
         // Get result type size
         int valSize = (int) binaryExpression.getType().getTypeDenoter().visit(this, null);
-        // Process first expression and get used size
-        int valSize1 = (int) binaryExpression.getOperand1().visit(this, frame);
-        Frame frame1 = new Frame(frame, valSize1);
-        // Process second expression and get used size
-        int valSize2 = (int) binaryExpression.getOperand2().visit(this, frame1);
-        // Move frame after both expressions
-        Frame frame2 = new Frame(frame.getLevel(), valSize1 + valSize2);
+        String operator = (String) binaryExpression.getOperator().getSpelling();
 
-        String operator = (String) binaryExpression.getOperator().visit(this, frame2);
-
+        // Handle assignment
         if (operator.equals("=")) {
-            var varDeclaration = ((VarExpression)binaryExpression.getOperand1()).getDeclaration();
-            encodeStore(varDeclaration, new Frame(frame2, valSize1), valSize1);
-        }
+            var varDeclaration = ((VarExpression) binaryExpression.getOperand1()).getDeclaration();
+            if (binaryExpression.getOperand2() instanceof CollectionLitExpression collectionLitExpression) {
+                // Store collection expression
+                var elements = collectionLitExpression.getLiteral().getLiteralList();
+                var address = (KnownAddress) varDeclaration.getEntity();
 
+
+                for (int i = 0; i < elements.size(); i++) {
+                    LiteralExpression literal = elements.get(i);
+
+                    int elementSize = (int) literal.visit(this, frame);//literal.getType().getTypeDenoter().visit(this, null);
+                    emit(Machine.STOREop, elementSize, displayRegister(frame.getLevel(),
+                            address.getAddress().getLevel()), address.getAddress().getDisplacement() + i);
+                }
+            } else {
+                int valSize1 = (int) binaryExpression.getOperand2().visit(this, frame);
+                encodeStore(varDeclaration, new Frame(frame, valSize1), valSize1);
+            }
+        } else {
+            // Process first expression and get used size
+            int valSize1 = (int) binaryExpression.getOperand1().visit(this, frame);
+            Frame frame1 = new Frame(frame, valSize1);
+            // Process second expression and get used size
+            int valSize2 = (int) binaryExpression.getOperand2().visit(this, frame1);
+            // Move frame after both expressions
+            Frame frame2 = new Frame(frame.getLevel(), valSize1 + valSize2);
+
+            operator = (String) binaryExpression.getOperator().visit(this, frame2);
+        }
         return valSize;
     }
 
@@ -289,9 +313,10 @@ public class Encoder implements Visitor {
         int startDisplacement = frame.getSize();
         int extraSize;
 
-        var reversedList = new ArrayList<>(collectionLiteral.getLiteralList());
-        Collections.reverse(reversedList);
-        for (LiteralExpression literal : reversedList) {
+        // Don't reverse now
+//        var reversedList = new ArrayList<>(collectionLiteral.getLiteralList());
+//        Collections.reverse(reversedList);
+        for (LiteralExpression literal : collectionLiteral.getLiteralList()) {
             extraSize = (int) literal.visit(this, arg);
             arg = new Frame(frame, extraSize);
         }
@@ -374,10 +399,13 @@ public class Encoder implements Visitor {
                     ((UnknownValue) baseObject).getAddress() :
                     ((KnownAddress) baseObject).getAddress();
             if (V.getType() instanceof Collection) {
-                emit(Machine.LOADAop, 0, displayRegister(frame.getLevel(), address.getLevel()),
-                        address.getDisplacement());
-                emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
-                emit(Machine.LOADIop, valSize, 0, 0);
+                int collectionSize = (int) ((Collection) V.getType()).getSize().visit(this, frame);
+                int typeSize = ((Collection) V.getType()).getCollectionType().getEntity().getSize();
+                address = ((KnownAddress) V.getEntity()).getAddress();
+                for (int i = 0; i < collectionSize; i++) {
+                    emit(Machine.LOADop, typeSize, displayRegister(frame.getLevel(),
+                            address.getLevel()), address.getDisplacement() + i);
+                }
             } else
                 emit(Machine.LOADop, valSize, displayRegister(frame.getLevel(),
                         address.getLevel()), address.getDisplacement());

@@ -261,7 +261,13 @@ public class Parser {
                     ParameterList parameterList = parseExpressionList();
                     accept(TokenKind.RIGHT_PARAN);
                     return new CallExpression(identifier, parameterList);
-                } else {
+                }
+//                else if (currentToken.kind == TokenKind.LEFT_DIAMOND) {
+//                    acceptIt();
+//                    return new ArrayAccessExpression();
+//                    accept(TokenKind.RIGHT_DIAMOND);
+//                }
+                else {
                     return new VarExpression(identifier);
                 }
             }

@@ -11,7 +11,7 @@ public class TestDriverScanner {
 
 
     public static void main(String[] args) {
-        String sourceName = "loop.tl";
+        String sourceName = "test.tl";
         SourceFile in = new SourceFile(EXAMPLES_DIR + sourceName);
         Scanner scanner = new Scanner(in);
         Parser parser = new Parser(scanner);
